@@ -8,10 +8,10 @@ app.use(helmet());
 app.use(compression());
 
 //startuj bazu
-require("./src/db")();
+require("./startup/db")();
 
 //definisi rute
-require("./src/routes")(app);
+require("./startup/routes")(app);
 
 const port = process.env.PORT || 3000;
 

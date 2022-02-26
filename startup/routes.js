@@ -1,6 +1,6 @@
 const express = require("express");
-const users = require("./routes/users");
-const error = require("./middleware/error");
+const users = require("../routes/users");
+const error = require("../middleware/error");
 
 module.exports = function (app) {
   app.use(express.json());

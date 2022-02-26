@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const keys = require("./config/keys");
+const keys = require("../config/keys");
 
 module.exports = function () {
   mongoose

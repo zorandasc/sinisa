@@ -1,4 +1,5 @@
 import React from "react";
+import mern from "../mern.jpg";
 
 const home = () => {
   return (
@@ -25,7 +26,7 @@ const home = () => {
       <img
         style={{ maxWidth: "100%" }}
         alt="Mern Stack"
-        src="https://webimages.mongodb.com/_com_assets/cms/mern-stack-b9q1kbudz0.png?auto=format%2Ccompress"
+        src={mern}
       ></img>
       <br></br>
       <p>
@@ -50,7 +51,6 @@ const home = () => {
         Express.js server, where they can be processed and (assuming they’re
         valid) stored directly in MongoDB for later retrieval.
       </p>
-    
     </div>
   );
 };

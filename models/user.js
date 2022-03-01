@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 const Joi = require("joi");
 
 const jwt = require("jsonwebtoken");
@@ -10,6 +11,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 4,
     maxlength: 50,
+    unique: true,
   },
   email: {
     type: String,
@@ -30,6 +32,8 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.plugin(AutoIncrement, { inc_field: "id", start_seq: 8 });
+
 userSchema.methods.generateAuthToken = function () {
   return jwt.sign(
     { _id: this._id, username: this.username, isAdmin: this.isAdmin },
@@ -42,8 +46,8 @@ userSchema.methods.generateAuthToken = function () {
 
 const User = mongoose.model("User", userSchema);
 
-//CLIENT INPUT VALIDACIJA
-function validateUser(user) {
+//CLIENT INPUT VALIDACIJA KOD REGISTRACIJE I PROMJENE
+function validateRegister(user) {
   const schema = Joi.object({
     username: Joi.string().min(4).max(50).required(),
     email: Joi.string().min(4).max(50).required().email(),
@@ -53,16 +57,27 @@ function validateUser(user) {
   return schema.validate(user);
 }
 
-//LOGIN INPUT VALIDACIJA
+//CLIENT INPUT VALIDACIJA KOD LOGIN
 function validateLogin(req) {
   const schema = Joi.object({
-    email: Joi.string().min(5).max(255).required().email(),
+    username: Joi.string().min(4).max(50).required(),
     password: Joi.string().min(5).max(255).required(),
   });
+  return schema.validate(req);
+}
 
+//CLIENT INPUT VALIDACIJA KOD NEW
+function validateNew(req) {
+  const schema = Joi.object({
+    username: Joi.string().min(4).max(50).required(),
+    email: Joi.string().min(4).max(50).required().email(),
+    password: Joi.string().min(5).max(255).required(),
+    isAdmin: Joi.boolean().required(),
+  });
   return schema.validate(req);
 }
 
 exports.User = User;
-exports.validateUser = validateUser;
+exports.validateRegister = validateRegister;
 exports.validateLogin = validateLogin;
+exports.validateNew = validateNew;

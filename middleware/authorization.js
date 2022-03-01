@@ -3,12 +3,17 @@ const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 
 module.exports = function (req, res, next) {
-  const token = req.header("x-auth-token");
-
-  if (!token) return res.status(401).send("Access denied. No token provided");
+  if (!req.header("Authorization").startsWith("Bearer ")) {
+    return res.status(401).send("Access denied. No token provided");
+  }
+  const TokenArray = req.header("Authorization").split(" ");
+  //POSTO JE TokenArray[1] string 'null' 
+  if (TokenArray[1] === "null" || TokenArray[1] === "") {
+    return res.status(401).send("Access denied. No token provided");
+  }
 
   try {
-    const decodedpayload = jwt.verify(token, keys.jwtPrivateKey);
+    const decodedpayload = jwt.verify(TokenArray[1], keys.jwtPrivateKey);
     req.user = decodedpayload;
     next();
   } catch (error) {

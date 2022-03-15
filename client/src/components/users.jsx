@@ -43,6 +43,7 @@ const Users = () => {
   return (
     <div className="col">
       {loggedUser && (
+        <div>
         <Link
           to="/users/new"
           type="button"
@@ -51,6 +52,8 @@ const Users = () => {
         >
           New User
         </Link>
+        <button style={{backgroundColor:"red"}}>Sinisa</button>
+        </div>
       )}
       <Outlet />
       <table className="table table-md table-light  table-hover shadow p-3 mb-5 bg-body rounded ">

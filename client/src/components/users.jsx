@@ -1,16 +1,19 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { useReactToPrint } from "react-to-print";
 import { toast } from "react-toastify";
 
 import http from "../services/httpService";
 import UserContext from "../context/userContext";
+import Printer from "./Printer";
 
 const Users = () => {
+  //ref fror printing
+  const componentRef = useRef();
   const [users, setUsers] = useState([]);
 
   const { user } = useContext(UserContext);
   let loggedUser = user ? user.username : "";
- 
 
   const getUsers = async () => {
     const { data } = await http.get("/api/users/list");
@@ -40,19 +43,36 @@ const Users = () => {
     }
   };
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   return (
     <div className="col">
+      <div style={{ display: "none" }}>
+        <Printer items={users} ref={componentRef} />
+      </div>
       {loggedUser && (
-        <div>
-        <Link
-          to="/users/new"
-          type="button"
-          className="btn btn-success"
-          style={{ marginBottom: 20 }}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          New User
-        </Link>
-        <button style={{backgroundColor:"red"}}>Sinisa</button>
+          <Link
+            to="/users/new"
+            type="button"
+            className="btn btn-success"
+            style={{ marginBottom: 20 }}
+          >
+            New User
+          </Link>
+
+          <button onClick={handlePrint} className="btn btn-primary">
+            <i className="fa fa-print fa-lg" aria-hidden="true"></i>{" "}
+            <span>Print</span>
+          </button>
         </div>
       )}
       <Outlet />
